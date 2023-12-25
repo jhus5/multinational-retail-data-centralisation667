@@ -108,13 +108,3 @@ if db_engine:
         else:
             print("Error Initializing Database Engine.")
             
-'''
-DATABASE_TYPE = 'postgresql'
-DBAPI = 'psycopg2'
-HOST = 'localhost'
-USER = 'postgres'
-PASSWORD = 'panana'
-DATABASE = 'Pagila'
-PORT = 5432
-engine = create_engine(f"{DATABASE_TYPE}+{DBAPI}://{USER}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}")
-'''
