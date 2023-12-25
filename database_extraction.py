@@ -70,7 +70,7 @@ if credentials:
 # Initialize the database engine
 db_engine = data_extractor_instance.init_db_engine()
 
-# Test read tables
+# Test code to read tables
 if db_engine:
     print("Database Engine Initialized Successfully.")
     # You can now use 'db_engine' to interact with the database
@@ -83,19 +83,19 @@ if db_engine:
 else:
     print("Error Initializing Database Engine.")
 
-#test df of tables
-# List all tables in the database
-#tables = data_extractor_instance.list_db_tables()
+#Test code to observe data from AWS database
+## List all tables in the database
+##tables = data_extractor_instance.list_db_tables() - this is already
     
 if db_engine:
     if tables:
         #print("Tables in the database:")
         #print(tables)
 
-        # Assume 'users' is the table containing user data
+        # 'legacy_users' is the table containing user data
         user_table_name = 'legacy_users'
 
-        # Read data from the 'users' table into a DataFrame
+        # Read data from the 'legacy_users' table into a DataFrame
         user_data_df = data_extractor_instance.read_rds_table(user_table_name)
         if user_data_df is not None:
             print(f"Data from '{user_table_name}' table:")

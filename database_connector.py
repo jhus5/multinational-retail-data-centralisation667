@@ -6,7 +6,7 @@ from data_cleaning import DataCleaning
 class DatabaseConnector:
     def __init__(self):
         self.db_connector = self.init_local_db_connector()
-
+    # Reading creddentials for local data (seperate file from cloud db)
     def read_local_db_creds(self, file_path='local_db_creds.yaml'):
         try:
             with open(file_path, 'r') as file:
@@ -18,11 +18,10 @@ class DatabaseConnector:
             print(f"Error reading YAML file: {e}")
         return None
 
-
+    # Connecting to a local PostgreSQL database
     def init_local_db_connector(self):
         credentials = self.read_db_creds()
         if credentials:
-            # Change the database URL to connect to a local PostgreSQL database
             db_url = f"postgresql://{credentials.get('RDS_USER', '')}:{credentials.get('RDS_PASSWORD', '')}@localhost:5432/{credentials.get('RDS_DATABASE', '')}"
             
             # Initialize and return the DatabaseConnector
