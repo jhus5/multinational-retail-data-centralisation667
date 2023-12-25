@@ -24,6 +24,7 @@ class DatabaseConnector:
     # Establish connection to local postgres database
     def init_local_db_connector(self):
         credentials = self.read_local_db_creds()
+        conn = None
         cur = None
         try:
             conn = psycopg2.connect(user = credentials.get['RDS_USER', ''], password = credentials.get['RDS_PASSWORD', ''], host = credentials.get['RDS_HOST', ''], port = credentials.get['RDS_PORT', ''], dbname = credentials.get['RDS_DATABASE', ''])
@@ -33,6 +34,8 @@ class DatabaseConnector:
             print("Error: connection not initialised.")
         
         finally:
+            if conn is not None:
+                conn.close()
             if cur is not None:
                 cur.close() 
 
