@@ -1,12 +1,15 @@
 #import libraries
 import yaml
-from sqlalchemy import create_engine
+import pandas as pd
+import psycopg2
+#from sqlalchemy import create_engine
 from data_cleaning import DataCleaning
 
 class DatabaseConnector:
     def __init__(self):
         self.db_connector = self.init_local_db_connector()
-    # Reading creddentials for local data (seperate file from cloud db)
+    
+    # Reading credentials for local data (seperate file from cloud db)
     def read_local_db_creds(self, file_path='local_db_creds.yaml'):
         try:
             with open(file_path, 'r') as file:
@@ -18,19 +21,25 @@ class DatabaseConnector:
             print(f"Error reading YAML file: {e}")
         return None
 
-    # Connecting to a local PostgreSQL database
+    # Establish connection to local postgres database
     def init_local_db_connector(self):
-        credentials = self.read_db_creds()
-        if credentials:
-            db_url = f"postgresql://{credentials.get('RDS_USER', '')}:{credentials.get('RDS_PASSWORD', '')}@localhost:5432/{credentials.get('RDS_DATABASE', '')}"
-            
-            # Initialize and return the DatabaseConnector
-            return DatabaseConnector(db_url)
-        else:
-            return None
+        credentials = self.read_local_db_creds()
+        cur = None
+        try:
+            conn = psycopg2.connect(user = credentials.get['RDS_USER', ''], password = credentials.get['RDS_PASSWORD', ''], host = credentials.get['RDS_HOST', ''], port = credentials.get['RDS_PORT', ''], dbname = credentials.get['RDS_DATABASE', ''])
+            cur = conn.cursor() 
+            return cur
+        except Exception as error:
+            print("Error: connection not initialised.")
+        
+        finally:
+            if cur is not None:
+                cur.close() 
 
-    def upload_to_db(self, cleaned_data, table_name='legacy_users'):
+    # Upload cleaned table data to local database
+    def upload_to_db(self, cleaned_data, table_name='dim_users'):
         if self.db_connector:
             self.db_connector.upload_to_db(cleaned_data, table_name)
         else:
-            print("Error: Database connector not initialized.")
+            print("Error: Uploading error to table.")
+
