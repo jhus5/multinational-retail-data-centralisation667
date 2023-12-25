@@ -1,0 +1,7 @@
+# ignore ALL .log files
+*.log
+#ignore credentials
+/db_creds.yaml
+/local_db_creds.yaml
+# ignore ALL files in ANY directory named temp
+temp/
