@@ -39,8 +39,8 @@ class DataCleaning:
             return self.data
 
     def clean_user_data(self):
-        # Example usage of cleaning methods
+        # Execustion of cleaning methods
         cleaned_data = self.clean_null_values()
         cleaned_data = self.clean_date_errors('join_data')
-        cleaned_data = self.clean_data_types('address', str)
+        cleaned_data = self.clean_data_types('address', object)
         return cleaned_data
