@@ -3,12 +3,11 @@ import yaml
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData
 import pandas as pd
-#from database_connector import DatabaseConnector
+#from data_cleaning import DataCleaning
 
 class DataExtractor:
     def __init__(self):
         self.db_engine = self.init_db_engine()
-        #self.db_connector = self.init_db_connector()
 
     def read_db_creds(self, file_path='db_creds.yaml'):
         try:
@@ -107,4 +106,3 @@ if db_engine:
             #print(user_data_df.info())
         else:
             print("Error Initializing Database Engine.")
-            

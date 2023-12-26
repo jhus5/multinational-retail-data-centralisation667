@@ -1,4 +1,5 @@
 import pandas as pd
+from database_extraction import read_rds_table
 
 class DataCleaning:
     def __init__(self, data):
@@ -37,10 +38,9 @@ class DataCleaning:
                 print(f"Error cleaning data types: {e}")
             return self.data
 
-
     def clean_user_data(self):
         # Example usage of cleaning methods
         cleaned_data = self.clean_null_values()
         cleaned_data = self.clean_date_errors('join_data')
-        cleaned_data = self.clean_data_types('age', int)
+        cleaned_data = self.clean_data_types('address', str)
         return cleaned_data
