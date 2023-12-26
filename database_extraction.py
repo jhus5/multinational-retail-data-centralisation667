@@ -3,7 +3,6 @@ import yaml
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData
 import pandas as pd
-#from data_cleaning import DataCleaning
 
 class DataExtractor:
     def __init__(self):
@@ -97,12 +96,14 @@ if db_engine:
         # Read data from the 'legacy_users' table into a DataFrame
         user_data_df = data_extractor_instance.read_rds_table(user_table_name)
         if user_data_df is not None:
-            print(f"Data from '{user_table_name}' table:")
+            print("display from dataextractor class")
+            #print(f"Data from '{user_table_name}' table:")
             #print(user_data_df)
             #print(list(user_data_df.columns))
             #print(user_data_df.iloc[[502]])
-            print(user_data_df.head(10))
-            print(user_data_df.dtypes)
+            #print(user_data_df.head(10))
+            #print(user_data_df.dtypes)
             #print(user_data_df.info())
+            #print("Printed from DataExtractor class")
         else:
             print("Error Initializing Database Engine.")
