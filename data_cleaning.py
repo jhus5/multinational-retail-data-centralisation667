@@ -22,7 +22,7 @@ class DataCleaning:
 
     def clean_data_types(self, column, target_type):
         # Cleaning the 'address' column from mistyping and errors
-        if column == 'address' and target_type == str:
+        if column == 'address' and target_type == object:
             try:
                 # Remove '\n' from the 'address' column with empty space
                 self.data[column] = self.data[column].astype(str).str.replace('\n', ' ')
