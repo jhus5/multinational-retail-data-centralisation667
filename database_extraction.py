@@ -55,9 +55,11 @@ class DataExtractor:
         else:
             print("Error: Database engine not initialized.")
             return None
-    
+
+"""     
 # Create an instance of DataExtractor
 data_extractor_instance = DataExtractor()
+
 
 # Test code to see if credentials load
 credentials = data_extractor_instance.read_db_creds()
@@ -107,3 +109,4 @@ if db_engine:
             #print("Printed from DataExtractor class")
         else:
             print("Error Initializing Database Engine.")
+  """
