@@ -1,5 +1,5 @@
 import pandas as pd
-from database_extraction import read_rds_table
+from database_extraction import DataExtractor
 
 class DataCleaning:
     def __init__(self, data):

@@ -1,6 +1,7 @@
 import yaml
 import pandas as pd
 from sqlalchemy import create_engine
+#from sqlalchemy_utils import database_exists, create_database
 from data_cleaning import DataCleaning
 
 class DatabaseConnector:
@@ -35,7 +36,7 @@ class DatabaseConnector:
             cleaned_data.to_sql(name=table_name, con=self.db_engine, if_exists='replace', index=False)
             print(f"Data uploaded to the '{table_name}' table successfully.")
         except Exception as e:
-            print(f"Error uploading data to the database: {e}")
+            print(f"Error uploading data to th`e database: {e}")
 
 # Testing class
 if __name__ == "__main__":
