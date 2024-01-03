@@ -31,13 +31,13 @@ class DatabaseConnector:
         else:
             return None
 
-"""     def upload_to_db(self, cleaned_data=DataCleaning(None).clean_user_data(), table_name='dim_users'):
+     def upload_to_db(self, cleaned_data=DataCleaning(None).clean_data(), table_name='dim_users'):
         try:
             # Convert DataFrame to SQL and upload to the specified table
             cleaned_data.to_sql(name=table_name, con=self.db_engine, if_exists='replace', index=False)
             print(f"Data uploaded to the '{table_name}' table successfully.")
         except Exception as e:
-            print(f"Error uploading data to th`e database: {e}") """
+            print(f"Error uploading data to th`e database: {e}")
 
 # Testing class
 if __name__ == "__main__":
