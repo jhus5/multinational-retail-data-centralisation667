@@ -31,7 +31,7 @@ class DatabaseConnector:
         else:
             return None
 
-    def upload_to_db(self, cleaned_data, table_name='dim_users'):
+    def upload_to_db(self, cleaned_data, table_name): #='dim_users'
         try:
             # Convert DataFrame to SQL and upload to the specified table
             cleaned_data.to_sql(name=table_name, con=self.engine, if_exists='replace', index=False)

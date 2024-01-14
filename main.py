@@ -41,7 +41,10 @@ if __name__ == "__main__":
     #insert dataframe into postgresql db
     database_connector_instance.upload_to_db(cleaned_data, table_name='dim_users')
     
-
+    #pdf_data extract, clean and upload to database
+    dfs = data_extractor_instance.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
+    dfs = data_cleaning_instance.clean_card_data(dfs)
+    database_connector_instance.upload_to_db(dfs, table_name='dim_card_details')
 '''
 def main ():
     #data extractor instance

@@ -4,6 +4,8 @@ import sqlalchemy
 from sqlalchemy import create_engine, MetaData
 import pandas as pd
 
+import tabula
+
 class DataExtractor:
     def __init__(self):
         self.db_engine = self.init_db_engine()
@@ -55,6 +57,18 @@ class DataExtractor:
         else:
             print("Error: Database engine not initialized.")
             return None
+    
+    #retrive pdf table data task #4
+    def retrieve_pdf_data(self, pdf_path):
+        #pdf_path = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf'
+        self.pdf_path = pdf_path
+        pass
+        # Read remote pdf into list of DataFrame
+        dfs = tabula.read_pdf(self.pdf_path, pages='1', stream = True) # pages='all'
+        #take first table from dataframes
+        dfs = dfs[0]
+        #print(df)
+        return dfs
 
 """     
 # Create an instance of DataExtractor

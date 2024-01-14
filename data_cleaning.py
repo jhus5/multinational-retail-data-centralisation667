@@ -12,7 +12,6 @@ class DataCleaning:
 
     # Methods to clean data
     def clean_data(self):
-        pass
         # Drop rows with NULL values
         df = self.data.dropna()
         
@@ -29,6 +28,22 @@ class DataCleaning:
         df = df.replace('\n',' ', regex=True)
         
         return df
+    
+    #pdf table data task #4 
+    def clean_card_data(self, dfs):
+        # Drop rows with NULL values
+        dfs = dfs.dropna()
+        
+
+        ##standardise dates
+        #remove non datetime
+        dfs['date_payment_confirmed'] = pd.to_datetime(dfs['date_payment_confirmed'], format = 'mixed', errors='coerce')
+        dfs = dfs.dropna(subset=['date_payment_confirmed'])
+        #keep date only
+        dfs['date_payment_confirmed'] = dfs['date_payment_confirmed'].dt.date
+      
+        print(dfs)
+        return dfs
     
 """
 
