@@ -45,6 +45,15 @@ if __name__ == "__main__":
     dfs = data_extractor_instance.retrieve_pdf_data('https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf')
     dfs = data_cleaning_instance.clean_card_data(dfs)
     database_connector_instance.upload_to_db(dfs, table_name='dim_card_details')
+
+    #api
+    #header dictionary
+    header_dict = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
+    no_stores_ep = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
+    store_number = data_extractor_instance.list_number_of_stores(header_dict, no_stores_ep)
+    retrieve_a_store_ep = f'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}'
+    data_extractor_instance.retrieve_stores_data(header_dict, retrieve_a_store_ep)
+
 '''
 def main ():
     #data extractor instance

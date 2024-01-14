@@ -1,10 +1,13 @@
 # Import required libraries
 import yaml
+#for db
 import sqlalchemy
 from sqlalchemy import create_engine, MetaData
 import pandas as pd
-
+#for pdf
 import tabula
+#for api
+import requests
 
 class DataExtractor:
     def __init__(self):
@@ -62,13 +65,44 @@ class DataExtractor:
     def retrieve_pdf_data(self, pdf_path):
         #pdf_path = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf'
         self.pdf_path = pdf_path
-        pass
         # Read remote pdf into list of DataFrame
         dfs = tabula.read_pdf(self.pdf_path, pages='1', stream = True) # pages='all'
         #take first table from dataframes
         dfs = dfs[0]
         #print(df)
         return dfs
+
+    ##api extract and clean details of each store
+    def list_number_of_stores(self, header_dict, no_stores_ep):
+        response = requests.get(no_stores_ep, headers=header_dict)
+        if response:
+            print('Request is successful.')
+            print(response.status_code)
+            #print(response.text)
+            print(response.json())
+            my_json = response.json()
+            no_of_stores = my_json['number_stores']
+            return no_of_stores
+        else:
+            print('Request returned an error.')
+            print(response.status_code)
+            
+    def retrieve_stores_data(self, header_dict, retrieve_a_store_ep):
+        print(retrieve_a_store_ep)
+        response = requests.get(retrieve_a_store_ep, headers=header_dict)
+        if response:
+            print('Request is successful.')
+            print(response.status_code)
+            #print(response.text)
+            #print(response.json())
+            #my_json = response.json()
+            #no_of_stores = my_json['number_stores'] ##
+            #return no_of_stores                     ##
+        else:
+            print('Request returned an error.')
+            print(response.status_code)
+
+
 
 """     
 # Create an instance of DataExtractor
