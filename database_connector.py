@@ -26,19 +26,20 @@ class DatabaseConnector:
             db_url = f"postgresql://{local_credentials.get('RDS_USER', '')}:{local_credentials.get('RDS_PASSWORD', '')}@localhost:5432/{local_credentials.get('RDS_DATABASE', '')}"
             
             # Initialize and return the DatabaseConnector with db_url
-            engine = create_engine(db_url)
-            return engine
+            self.engine = create_engine(db_url)
+            return self.engine
         else:
             return None
 
-     def upload_to_db(self, cleaned_data=DataCleaning(None).clean_data(), table_name='dim_users'):
+    def upload_to_db(self, cleaned_data, table_name='dim_users'):
         try:
             # Convert DataFrame to SQL and upload to the specified table
-            cleaned_data.to_sql(name=table_name, con=self.db_engine, if_exists='replace', index=False)
+            cleaned_data.to_sql(name=table_name, con=self.engine, if_exists='replace', index=False)
             print(f"Data uploaded to the '{table_name}' table successfully.")
         except Exception as e:
             print(f"Error uploading data to th`e database: {e}")
 
+"""
 # Testing class
 if __name__ == "__main__":
     # Create an instance of DatabaseConnector with the local database connection
@@ -49,18 +50,19 @@ if __name__ == "__main__":
     db_engine = database_connector_instance.init_local_db_connector()
 
     # Test code to read tables
-    if db_engine:
-        print("Database Engine Initialized Successfully.")
+    #if db_engine:
+    #    print("Database Engine Initialized Successfully.")
     
     # Test code to see if credentials load
-    credentials = database_connector_instance.read_local_db_creds()
-    if credentials:
-        print("Database Credentials:")
-        print(credentials)
+    #credentials = database_connector_instance.read_local_db_creds()
+    #if credentials:
+    #    print("Database Credentials:")
+    #    print(credentials)
     
     # Test upload to db
-    #clean_data = DataCleaning().clean_user_data()     
-    #database_connector_instance.upload_to_db(clean_data, table_name='dim_users')
+    clean_data = DataCleaning().clean_data()     
+    database_connector_instance.upload_to_db(clean_data, table_name='dim_users')
         
-    #test ddata extraction
-    
+    #test data extraction
+
+""" 

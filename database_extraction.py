@@ -50,7 +50,7 @@ class DataExtractor:
             # Use SQLAlchemy to query and fetch data
             query = f"SELECT * FROM {table_name}"
             df = pd.read_sql_query(query, self.db_engine, index_col='index')
-            #print(df.columns)
+            #print(df)
             return df
         else:
             print("Error: Database engine not initialized.")
