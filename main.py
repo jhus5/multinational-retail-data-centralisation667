@@ -33,10 +33,10 @@ if __name__ == "__main__":
     #print(df)
 
     #data cleaning instance
-    data_cleaning_instance = DataCleaning(df)
+    data_cleaning_instance = DataCleaning() #df
     #clean data
-    cleaned_data = data_cleaning_instance.clean_data()
-    print(cleaned_data)
+    cleaned_data = data_cleaning_instance.clean_data(df)
+    #print(cleaned_data)
     
     #insert dataframe into postgresql db
     database_connector_instance.upload_to_db(cleaned_data, table_name='dim_users')
@@ -46,14 +46,17 @@ if __name__ == "__main__":
     dfs = data_cleaning_instance.clean_card_data(dfs)
     database_connector_instance.upload_to_db(dfs, table_name='dim_card_details')
 
-    #api
+    ##api
     #header dictionary
     header_dict = {'x-api-key': 'yFBQbwXe9J3sd6zWVAMrK6lcxxr0q1lr2PT6DDMX'}
     no_stores_ep = 'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/number_stores'
-    store_number = data_extractor_instance.list_number_of_stores(header_dict, no_stores_ep)
-    retrieve_a_store_ep = f'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}'
-    data_extractor_instance.retrieve_stores_data(header_dict, retrieve_a_store_ep)
 
+    storenumber = data_extractor_instance.list_number_of_stores(header_dict, no_stores_ep)
+    api_df = data_extractor_instance.retrieve_stores_data(header_dict, storenumber)
+
+    #clean data
+    store_details = data_cleaning_instance.called_clean_store_data(api_df)
+    database_connector_instance.upload_to_db(store_details, table_name='dim_store_details')
 '''
 def main ():
     #data extractor instance

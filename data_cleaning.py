@@ -6,14 +6,15 @@ class DataCleaning:
     #def __init__(self, df) -> None:
     #    pass
      
-    def __init__(self, df): 
-        self.data = df
+    def __init__(self): 
+        None
+        #self.data = df
         #print(df)
 
     # Methods to clean data
-    def clean_data(self):
+    def clean_data(self, df):
         # Drop rows with NULL values
-        df = self.data.dropna()
+        df = df.dropna(how='all')
         
 
         ##standardise dates
@@ -32,7 +33,7 @@ class DataCleaning:
     #pdf table data task #4 
     def clean_card_data(self, dfs):
         # Drop rows with NULL values
-        dfs = dfs.dropna()
+        dfs = dfs.dropna(how='all')
         
 
         ##standardise dates
@@ -42,9 +43,34 @@ class DataCleaning:
         #keep date only
         dfs['date_payment_confirmed'] = dfs['date_payment_confirmed'].dt.date
       
-        print(dfs)
+        #print(dfs)
         return dfs
     
+    #clean data from api - task 5
+    def called_clean_store_data(self, data):
+        self.csdata = data
+
+        # Drop rows with NULL values
+        self.csdata = self.csdata.dropna(how='all')
+
+        ##standardise dates
+        #convert to correct format
+        self.csdata['opening_date'] = pd.to_datetime(self.csdata['opening_date'], format = 'mixed', errors='coerce')
+        
+        #remove empty rows
+        self.csdata = self.csdata.dropna(subset=['opening_date'])
+        
+        #keep date only
+        #self.csdata['opening_date'] = self.csdata['opening_date'].dt.date
+      
+        ##fix address by stripping new line ('\n') 
+        # Removing new line expression
+        self.csdata['address'] = self.csdata['address'].replace('\n',' ', regex=True)
+        
+        csdata = self.csdata
+
+        #print(self.csdata.head())
+        return csdata
 """
 
     def clean_user_data(self):

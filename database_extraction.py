@@ -8,6 +8,7 @@ import pandas as pd
 import tabula
 #for api
 import requests
+import json
 
 class DataExtractor:
     def __init__(self):
@@ -87,21 +88,21 @@ class DataExtractor:
             print('Request returned an error.')
             print(response.status_code)
             
-    def retrieve_stores_data(self, header_dict, retrieve_a_store_ep):
-        print(retrieve_a_store_ep)
-        response = requests.get(retrieve_a_store_ep, headers=header_dict)
-        if response:
-            print('Request is successful.')
-            print(response.status_code)
-            #print(response.text)
+    def retrieve_stores_data(self, header_dict, storenumber):
+        #storenumber = self.list_number_of_stores(header_dict, no_stores_ep)
+        data = []
+        for store_number in range (0, storenumber):
+            retrieve_a_store_ep = f'https://aqj7u5id95.execute-api.eu-west-1.amazonaws.com/prod/store_details/{store_number}'
+            response = requests.get(retrieve_a_store_ep, headers=header_dict)
             #print(response.json())
-            #my_json = response.json()
-            #no_of_stores = my_json['number_stores'] ##
-            #return no_of_stores                     ##
-        else:
-            print('Request returned an error.')
-            print(response.status_code)
-
+            data.append(response.json())
+        #cobert json to dataframe
+        df = pd.json_normalize(data)
+        # setting index as index column
+        df.set_index("index", inplace = True)
+        #print(df.head())
+        return(df)
+            
 
 
 """     
