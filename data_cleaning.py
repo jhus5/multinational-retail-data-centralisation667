@@ -71,6 +71,14 @@ class DataCleaning:
 
         #print(self.csdata.head())
         return csdata
+    
+    def convert_product_weights(s3_df):
+        pass
+    #strip alpha i.e. kg and g
+    
+    #convert to float
+
+    return s3_df
 """
 
     def clean_user_data(self):

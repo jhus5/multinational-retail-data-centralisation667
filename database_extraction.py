@@ -14,30 +14,8 @@ import boto3
 
 
 class DataExtractor:
-    def __init__(self):
-        self.db_engine = self.init_db_engine()
-
-    def read_db_creds(self, file_path='db_creds.yaml'):
-        try:
-            with open(file_path, 'r') as file:
-                credentials = yaml.safe_load(file)
-            return credentials
-        except FileNotFoundError:
-            print(f"Error: The file {file_path} was not found.")
-        except yaml.YAMLError as e:
-            print(f"Error reading YAML file: {e}")
-
-    def init_db_engine(self):
-        credentials = self.read_db_creds()
-        if credentials:
-            # Construct the database URL
-            db_url = f"postgresql://{credentials.get('RDS_USER', '')}:{credentials.get('RDS_PASSWORD', '')}@{credentials.get('RDS_HOST', '')}:{credentials.get('RDS_PORT', '')}/{credentials.get('RDS_DATABASE', '')}"
-
-            # Initialize and return the SQLAlchemy engine
-            engine = create_engine(db_url)
-            return engine
-        else:
-            return None
+    def __init__(self, engine):
+        self.db_engine = engine
 
     def list_db_tables(self):
         if self.db_engine:
@@ -106,70 +84,40 @@ class DataExtractor:
         #print(df.head())
         return(df)
 
-'''
     #CSV from AWS (task 6)
     def extract_from_s3(self, url='s3://data-handling-public/products.csv'):
         self.path = url
         # s3 boto client and csv path
         s3_client = boto3.client('s3')
         #path = 's3://data-handling-public/products.csv'
-        response = s3_client.get_object(Bucket='data-handling-public', key=self.path)
-        df = pd.read_csv(response)
+        obj = s3_client.get_object(Bucket='data-handling-public', Key='products.csv')
+        s3_df = pd.read_csv(obj['Body'], index_col=0)
 
-        print(df.head())
+        print(s3_df.weight[2])
+        return s3_df
+
+
+
 '''
+    def read_db_creds(self, file_path='db_creds.yaml'):
+        try:
+            with open(file_path, 'r') as file:
+                credentials = yaml.safe_load(file)
+            return credentials
+        except FileNotFoundError:
+            print(f"Error: The file {file_path} was not found.")
+        except yaml.YAMLError as e:
+            print(f"Error reading YAML file: {e}")
 
-"""     
-# Create an instance of DataExtractor
-data_extractor_instance = DataExtractor()
+    def init_db_engine(self):
+        credentials = self.read_db_creds()
+        if credentials:
+            # Construct the database URL
+            db_url = f"postgresql://{credentials.get('RDS_USER', '')}:{credentials.get('RDS_PASSWORD', '')}@{credentials.get('RDS_HOST', '')}:{credentials.get('RDS_PORT', '')}/{credentials.get('RDS_DATABASE', '')}"
 
-
-# Test code to see if credentials load
-credentials = data_extractor_instance.read_db_creds()
-if credentials:
-    print("Database Credentials:")
-    print(credentials) 
-
-# Initialize the database engine
-db_engine = data_extractor_instance.init_db_engine()
-
-# Test code to read tables
-if db_engine:
-    print("Database Engine Initialized Successfully.")
-    # You can now use 'db_engine' to interact with the database
-
-    # List all tables in the database
-    tables = data_extractor_instance.list_db_tables()
-    if tables:
-        print("Tables in the database:")
-        print(tables)
-else:
-    print("Error Initializing Database Engine.")
-
-#Test code to observe data from AWS database
-## List all tables in the database
-##tables = data_extractor_instance.list_db_tables() - this is already
-    
-if db_engine:
-    if tables:
-        #print("Tables in the database:")
-        #print(tables)
-
-        # 'legacy_users' is the table containing user data
-        user_table_name = 'legacy_users'
-
-        # Read data from the 'legacy_users' table into a DataFrame
-        user_data_df = data_extractor_instance.read_rds_table(user_table_name)
-        if user_data_df is not None:
-            print("display from dataextractor class")
-            #print(f"Data from '{user_table_name}' table:")
-            #print(user_data_df)
-            #print(list(user_data_df.columns))
-            #print(user_data_df.iloc[[502]])
-            #print(user_data_df.head(10))
-            #print(user_data_df.dtypes)
-            #print(user_data_df.info())
-            #print("Printed from DataExtractor class")
+            # Initialize and return the SQLAlchemy engine
+            engine = create_engine(db_url)
+            return engine
         else:
-            print("Error Initializing Database Engine.")
-  """
+            return None
+'''
