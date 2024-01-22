@@ -9,6 +9,9 @@ import tabula
 #for api
 import requests
 import json
+#s3 buckets
+import boto3
+
 
 class DataExtractor:
     def __init__(self):
@@ -102,8 +105,19 @@ class DataExtractor:
         df.set_index("index", inplace = True)
         #print(df.head())
         return(df)
-            
 
+'''
+    #CSV from AWS (task 6)
+    def extract_from_s3(self, url='s3://data-handling-public/products.csv'):
+        self.path = url
+        # s3 boto client and csv path
+        s3_client = boto3.client('s3')
+        #path = 's3://data-handling-public/products.csv'
+        response = s3_client.get_object(Bucket='data-handling-public', key=self.path)
+        df = pd.read_csv(response)
+
+        print(df.head())
+'''
 
 """     
 # Create an instance of DataExtractor

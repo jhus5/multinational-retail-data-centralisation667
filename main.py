@@ -57,6 +57,9 @@ if __name__ == "__main__":
     #clean data
     store_details = data_cleaning_instance.called_clean_store_data(api_df)
     database_connector_instance.upload_to_db(store_details, table_name='dim_store_details')
+
+    ##aws csv
+    csv_df = data_extractor_instance.extract_from_s3()
 '''
 def main ():
     #data extractor instance
