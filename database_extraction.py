@@ -12,6 +12,11 @@ import json
 #s3 buckets
 import boto3
 
+##regex
+import re
+
+import numpy as np
+
 
 class DataExtractor:
     def __init__(self, engine):
@@ -93,7 +98,76 @@ class DataExtractor:
         obj = s3_client.get_object(Bucket='data-handling-public', Key='products.csv')
         s3_df = pd.read_csv(obj['Body'], index_col=0)
 
-        print(s3_df.weight[2])
+
+        s3_df = s3_df.dropna(how='all')
+        
+        #print(s3_df.weight[2])
+        #print(len(s3_df['weight']))
+        
+        ##convert ml
+        # contains_ml = s3_df[s3_df['weight'].str.contains(('ml'), na = False)]
+        # contains_ml['weight'] = contains_ml['weight'].replace('[^\d.]','', regex=True).astype(float)
+        # contains_ml['weight'] = contains_ml['weight']*0.001
+
+        # s3_df['weight'] = s3_df.loc[s3_df['weight'].str.contains(('ml'), na = False)]
+        # contains_ml['weight'] = contains_ml['weight'].replace('[^\d.]','', regex=True).astype(float)
+        # contains_ml['weight'] = contains_ml['weight']*0.001
+
+        #convert kg
+        # contains_kg = s3_df[s3_df['weight'].str.contains(('kg'), na = False)]
+        # contains_kg['weight'] = contains_kg['weight'].replace('[^\d.]','', regex=True).astype(float)
+        
+        #convert grams
+        # contains_grams = s3_df[s3_df['weight'].str.contains(('g'), na = False)]
+        #contains_grams['weight'] = contains_grams['weight'].replace('[^\d.]','', regex=True).astype(float)
+        #contains_grams['weight'] = contains_grams['weight']*0.001
+        
+        # contains_oz = s3_df[s3_df['weight'].str.contains(('oz'), na = False)]
+        # contains_oz['weight'] = contains_oz['weight'].replace('[^\d.]','', regex=True).astype(float)
+        # contains_oz['weight'] = contains_oz['weight']*28.35*0.001
+        
+        # drop rows containing 'x' in weight column
+        # contains_x = s3_df[s3_df['weight'].str.contains('x') == False]
+
+        # contains_p = s3_df[s3_df['weight'].str.contains(('p'), na = False)]
+        
+        #s3_df['weight'] = s3_df['weight'].str.contains(('ml'), na = False).strip("ml")
+        #s3_df['weight'] = 
+        #s3_df['weight'] = 
+        
+        
+        s3_df['weight'] = s3_df['weight'].str.strip('kg')
+        s3_df['weight'] = s3_df['weight'].str.strip('ml')
+        s3_df['weight'] = s3_df['weight'].str.strip('g')
+        s3_df['weight'] = s3_df['weight'].str.rstrip('.')
+        s3_df['weight'] = s3_df['weight'].str.replace('[A-Z]', '', regex=True)
+        s3_df['weight'] = s3_df['weight'].str.replace('[x]', '*', regex=True)
+        s3_df['weight'] = s3_df['weight'].str.replace('[a-z]', '', regex=True)
+        s3_df['weight'] = s3_df['weight'].str.replace(' ', '')
+        s3_df['weight'] = s3_df['weight'].replace(to_replace='1',value="1000")
+        # to_replace '*'
+        #s3_df.loc[s3_df['weight'].str.contains('*', na =False)] =  s3_df['weight'].replace(to_replace='*',value="MULTIYPLY")
+
+        s = s3_df['weight'].str.split(pat='*', n = 1, expand=True)
+        s3_df['quantity_w'] = s[0]
+        s3_df['weight_q'] = s[1]
+        #replace none with 1
+        s3_df['weight_q'] = s3_df['weight_q'].fillna(1).astype(float)
+        #convert to float
+        s3_df['quantity_w'].astype(float)
+
+        #multiply and replace
+        #s3_df['weight_1'] = s3_df['quantity_w']*s3_df['weight_q']
+
+        #print(mask)
+        # print(contains_ml['weight'])
+        # print(contains_grams['weight'])
+        # print(contains_kg['weight'])
+        # print(contains_oz['weight'])
+        # print(contains_x['weight'])
+        # print(s3_df['weight'])
+        # print(s3_df['weight'][1748])
+        print(s3_df)
         return s3_df
 
 

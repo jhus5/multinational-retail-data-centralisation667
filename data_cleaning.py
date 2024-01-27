@@ -72,13 +72,26 @@ class DataCleaning:
         #print(self.csdata.head())
         return csdata
     
-    def convert_product_weights(s3_df):
-        pass
-    #strip alpha i.e. kg and g
-    
-    #convert to float
+    # def convert_product_weights(s3_df):
+    #     for line in len(s3_df['weight']):
+    #         if 'ml' in s3_df.weight[line]:
+    #             #remove ml 
+    #             #convert to float
+    #             #multiply bu 0.001
+    #         elif 'g' in s3_df.weight[line]:
+    #             #remove g 
+    #             #convert to float
+    #             #multiply bu 0.001
+    #         else:
+    #             #remove kg
+    #             #convert to float
 
-    return s3_df
+    #     s3_df.weight
+    # #strip alpha i.e. kg and g
+    
+    # #convert to float
+
+    # return s3_df
 """
 
     def clean_user_data(self):
