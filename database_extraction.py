@@ -153,11 +153,20 @@ class DataExtractor:
         s3_df['weight_q'] = s[1]
         #replace none with 1
         s3_df['weight_q'] = s3_df['weight_q'].fillna(1).astype(float)
+        s3_df['weight_q'] = s3_df['weight_q'].astype(float)
         #convert to float
-        s3_df['quantity_w'].astype(float)
+        s3_df['quantity_w'] = s3_df['quantity_w'].astype(float)
 
         #multiply and replace
-        #s3_df['weight_1'] = s3_df['quantity_w']*s3_df['weight_q']
+        s3_df['weight_1'] = s3_df['quantity_w']*s3_df['weight_q']
+        #replace weight with weight 1
+        s3_df['weight'] = s3_df['weight_1']
+        #drop columns
+        s3_df = s3_df.drop(['quantity_w'], axis = 1)
+        s3_df = s3_df.drop(['weight_q'], axis = 1)
+        s3_df = s3_df.drop(['weight_1'], axis = 1)
+        
+
 
         #print(mask)
         # print(contains_ml['weight'])
