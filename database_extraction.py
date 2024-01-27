@@ -100,9 +100,31 @@ class DataExtractor:
 
 
         s3_df = s3_df.dropna(how='all')
+
+        #remove whitespace
+        s3_df['weight'] = s3_df['weight'].str.rstrip()
+        print(s3_df)
         
         #print(s3_df.weight[2])
         #print(len(s3_df['weight']))
+
+        def convert_to_kg(x):
+            if 'kg' in x:
+                return float(x[:-2]) * 1
+            elif 'ml' in x:
+                return float(x[:-2]) * 0.001
+            elif 'oz' in x:
+                return float(x[:-2]) * 28.35 * 0.001
+            elif 'g' in x:
+                return float(x[:-1]) * 0.001
+            elif 'x' in x:
+                pass
+            else:
+                pass
+
+        s3_df['weight'] = s3_df['weight'].apply(convert_to_kg)
+
+        
         
         ##convert ml
         # contains_ml = s3_df[s3_df['weight'].str.contains(('ml'), na = False)]
@@ -135,37 +157,37 @@ class DataExtractor:
         #s3_df['weight'] = 
         #s3_df['weight'] = 
         
-        
-        s3_df['weight'] = s3_df['weight'].str.strip('kg')
-        s3_df['weight'] = s3_df['weight'].str.strip('ml')
-        s3_df['weight'] = s3_df['weight'].str.strip('g')
-        s3_df['weight'] = s3_df['weight'].str.rstrip('.')
-        s3_df['weight'] = s3_df['weight'].str.replace('[A-Z]', '', regex=True)
-        s3_df['weight'] = s3_df['weight'].str.replace('[x]', '*', regex=True)
-        s3_df['weight'] = s3_df['weight'].str.replace('[a-z]', '', regex=True)
-        s3_df['weight'] = s3_df['weight'].str.replace(' ', '')
-        s3_df['weight'] = s3_df['weight'].replace(to_replace='1',value="1000")
-        # to_replace '*'
-        #s3_df.loc[s3_df['weight'].str.contains('*', na =False)] =  s3_df['weight'].replace(to_replace='*',value="MULTIYPLY")
+        ####
+        # s3_df['weight'] = s3_df['weight'].str.strip('kg')
+        # s3_df['weight'] = s3_df['weight'].str.strip('ml')
+        # s3_df['weight'] = s3_df['weight'].str.strip('g')
+        # s3_df['weight'] = s3_df['weight'].str.rstrip('.')
+        # s3_df['weight'] = s3_df['weight'].str.replace('[A-Z]', '', regex=True)
+        # s3_df['weight'] = s3_df['weight'].str.replace('[x]', '*', regex=True)
+        # s3_df['weight'] = s3_df['weight'].str.replace('[a-z]', '', regex=True)
+        # s3_df['weight'] = s3_df['weight'].str.replace(' ', '')
+        # s3_df['weight'] = s3_df['weight'].replace(to_replace='1',value="1000")
+        # # to_replace '*'
+        # #s3_df.loc[s3_df['weight'].str.contains('*', na =False)] =  s3_df['weight'].replace(to_replace='*',value="MULTIYPLY")
 
-        s = s3_df['weight'].str.split(pat='*', n = 1, expand=True)
-        s3_df['quantity_w'] = s[0]
-        s3_df['weight_q'] = s[1]
-        #replace none with 1
-        s3_df['weight_q'] = s3_df['weight_q'].fillna(1).astype(float)
-        s3_df['weight_q'] = s3_df['weight_q'].astype(float)
-        #convert to float
-        s3_df['quantity_w'] = s3_df['quantity_w'].astype(float)
+        # s = s3_df['weight'].str.split(pat='*', n = 1, expand=True)
+        # s3_df['quantity_w'] = s[0]
+        # s3_df['weight_q'] = s[1]
+        # #replace none with 1
+        # s3_df['weight_q'] = s3_df['weight_q'].fillna(1).astype(float)
+        # s3_df['weight_q'] = s3_df['weight_q'].astype(float)
+        # #convert to float
+        # s3_df['quantity_w'] = s3_df['quantity_w'].astype(float)
 
-        #multiply and replace
-        s3_df['weight_1'] = s3_df['quantity_w']*s3_df['weight_q']
-        #replace weight with weight 1
-        s3_df['weight'] = s3_df['weight_1']
-        #drop columns
-        s3_df = s3_df.drop(['quantity_w'], axis = 1)
-        s3_df = s3_df.drop(['weight_q'], axis = 1)
-        s3_df = s3_df.drop(['weight_1'], axis = 1)
-        
+        # #multiply and replace
+        # s3_df['weight_1'] = s3_df['quantity_w']*s3_df['weight_q']
+        # #replace weight with weight 1
+        # s3_df['weight'] = s3_df['weight_1']
+        # #drop columns
+        # s3_df = s3_df.drop(['quantity_w'], axis = 1)
+        # s3_df = s3_df.drop(['weight_q'], axis = 1)
+        # s3_df = s3_df.drop(['weight_1'], axis = 1)
+        ####
 
 
         #print(mask)
