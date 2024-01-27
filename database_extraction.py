@@ -111,7 +111,27 @@ class DataExtractor:
         #print(len(s3_df['weight']))
 
         def convert_to_kg(x):
-            if 'kg' in x:
+            if 'x' in x:
+                ####
+                s = s3_df['weight'].str.split(pat='x', n = 1, expand=True)
+                s3_df['quantity_w'] = s[0]
+                s3_df['weight_q'] = s[1]
+                #replace none with 1
+                s3_df['weight_q'] = s3_df['weight_q'].fillna(1).astype(float)
+                s3_df['weight_q'] = s3_df['weight_q'].astype(float)
+                #convert to float
+                s3_df['quantity_w'] = s3_df['quantity_w'].astype(float)
+
+                #multiply and replace
+                s3_df['weight_1'] = s3_df['quantity_w']*s3_df['weight_q']
+                #replace weight with weight 1
+                s3_df['weight'] = s3_df['weight_1']
+                #drop columns
+                s3_df = s3_df.drop(['quantity_w'], axis = 1)
+                s3_df = s3_df.drop(['weight_q'], axis = 1)
+                s3_df = s3_df.drop(['weight_1'], axis = 1)
+                ####
+            elif 'kg' in x:
                 return float(x[:-2]) * 1
             elif 'ml' in x:
                 return float(x[:-2]) * 0.001
@@ -119,8 +139,6 @@ class DataExtractor:
                 return float(x[:-2]) * 28.35 * 0.001
             elif 'g' in x:
                 return float(x[:-1]) * 0.001
-            elif 'x' in x:
-                pass
             else:
                 pass
 
