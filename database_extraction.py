@@ -98,7 +98,9 @@ class DataExtractor:
         obj = s3_client.get_object(Bucket='data-handling-public', Key='products.csv')
         s3_df = pd.read_csv(obj['Body'], index_col=0)
 
+        #return s3_df
 
+        ##the following code should go to data_cleaning class 
         s3_df = s3_df.dropna(how='all')
 
         #remove whitespace
