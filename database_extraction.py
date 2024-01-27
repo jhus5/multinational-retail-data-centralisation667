@@ -102,7 +102,7 @@ class DataExtractor:
         s3_df = s3_df.dropna(how='all')
 
         #remove whitespace
-        s3_df['weight'] = s3_df['weight'].str.rstrip()
+        s3_df['weight'] = s3_df['weight'].str.strip()
         print(s3_df)
         
         #print(s3_df.weight[2])
