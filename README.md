@@ -34,23 +34,25 @@ pip install sqlalchemy pandas tabula requests boto3 numpy
 
 ## 4. Usage
 First, create a new configuration file config.yaml (such as db_creds.yaml and local_db_credds.yaml) to store your database credentials:
-
+```bash
 db_uri: postgresql://user:password@localhost/database_name
 s3_access_key: YOUR_AWS_ACCESS_KEY
 s3_secret_key: YOUR_AWS_SECRET_KEY
-
+```
 Now, you can use the provided scripts to fetch and data from various sources:
-AWS RDS
-JSON
-CSV
+- `AWS RDS`
+- `JSON`
+- `CSV`
 
 ## 5. File Structure
+```bash
 data_cleaning.py
 database_connector.py
 database_extraction.py
 db_creds.yaml
 local_db_creds.yaml
 main.py
+```
 
 ## 6. License
 This project is licensed under the MIT License. Feel free to use, modify and distribute the code as needed.
