@@ -45,28 +45,3 @@ class DatabaseConnector:
         except Exception as e:
             print(f"Error uploading data to th`e database: {e}")
 
-'''
-    #local db
-    def read_local_db_creds(self, file_path='local_db_creds.yaml'):
-        try:
-            with open(file_path, 'r') as file:
-                local_credentials = yaml.safe_load(file)
-            return local_credentials
-        except FileNotFoundError:
-            print(f"Error: The file {file_path} was not found.")
-        except yaml.YAMLError as e:
-            print(f"Error reading YAML file: {e}")
-        return None
-
-    def init_local_db_connector(self):
-        local_credentials = self.read_local_db_creds()
-        if local_credentials:
-            # Change the database URL to connect to a local PostgreSQL database
-            db_url = f"postgresql://{local_credentials.get('RDS_USER', '')}:{local_credentials.get('RDS_PASSWORD', '')}@localhost:5432/{local_credentials.get('RDS_DATABASE', '')}"
-            
-            # Initialize and return the DatabaseConnector with db_url
-            self.engine = create_engine(db_url)
-            return self.engine
-        else:
-            return None
-'''

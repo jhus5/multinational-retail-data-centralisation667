@@ -11,7 +11,6 @@ import requests
 import json
 #s3 buckets
 import boto3
-
 ##regex
 import re
 
@@ -98,151 +97,14 @@ class DataExtractor:
         obj = s3_client.get_object(Bucket='data-handling-public', Key='products.csv')
         s3_df = pd.read_csv(obj['Body'], index_col=0)
 
-        #return s3_df
-
-        ##the following code should go to data_cleaning class 
-        s3_df = s3_df.dropna(how='all')
-
-        #remove whitespace
-        s3_df['weight'] = s3_df['weight'].str.strip()
-        print(s3_df)
-        
-        #print(s3_df.weight[2])
-        #print(len(s3_df['weight']))
-
-        def convert_to_kg(x):
-            if 'x' in x:
-                ####
-                s = s3_df['weight'].str.split(pat='x', n = 1, expand=True)
-                s3_df['quantity_w'] = s[0]
-                s3_df['weight_q'] = s[1]
-                #replace none with 1
-                s3_df['weight_q'] = s3_df['weight_q'].fillna(1).astype(float)
-                s3_df['weight_q'] = s3_df['weight_q'].astype(float)
-                #convert to float
-                s3_df['quantity_w'] = s3_df['quantity_w'].astype(float)
-
-                #multiply and replace
-                s3_df['weight_1'] = s3_df['quantity_w']*s3_df['weight_q']
-                #replace weight with weight 1
-                s3_df['weight'] = s3_df['weight_1']
-                #drop columns
-                s3_df = s3_df.drop(['quantity_w'], axis = 1)
-                s3_df = s3_df.drop(['weight_q'], axis = 1)
-                s3_df = s3_df.drop(['weight_1'], axis = 1)
-                ####
-            elif 'kg' in x:
-                return float(x[:-2]) * 1
-            elif 'ml' in x:
-                return float(x[:-2]) * 0.001
-            elif 'oz' in x:
-                return float(x[:-2]) * 28.35 * 0.001
-            elif 'g' in x:
-                return float(x[:-1]) * 0.001
-            else:
-                pass
-
-        s3_df['weight'] = s3_df['weight'].apply(convert_to_kg)
-
-        
-        
-        ##convert ml
-        # contains_ml = s3_df[s3_df['weight'].str.contains(('ml'), na = False)]
-        # contains_ml['weight'] = contains_ml['weight'].replace('[^\d.]','', regex=True).astype(float)
-        # contains_ml['weight'] = contains_ml['weight']*0.001
-
-        # s3_df['weight'] = s3_df.loc[s3_df['weight'].str.contains(('ml'), na = False)]
-        # contains_ml['weight'] = contains_ml['weight'].replace('[^\d.]','', regex=True).astype(float)
-        # contains_ml['weight'] = contains_ml['weight']*0.001
-
-        #convert kg
-        # contains_kg = s3_df[s3_df['weight'].str.contains(('kg'), na = False)]
-        # contains_kg['weight'] = contains_kg['weight'].replace('[^\d.]','', regex=True).astype(float)
-        
-        #convert grams
-        # contains_grams = s3_df[s3_df['weight'].str.contains(('g'), na = False)]
-        #contains_grams['weight'] = contains_grams['weight'].replace('[^\d.]','', regex=True).astype(float)
-        #contains_grams['weight'] = contains_grams['weight']*0.001
-        
-        # contains_oz = s3_df[s3_df['weight'].str.contains(('oz'), na = False)]
-        # contains_oz['weight'] = contains_oz['weight'].replace('[^\d.]','', regex=True).astype(float)
-        # contains_oz['weight'] = contains_oz['weight']*28.35*0.001
-        
-        # drop rows containing 'x' in weight column
-        # contains_x = s3_df[s3_df['weight'].str.contains('x') == False]
-
-        # contains_p = s3_df[s3_df['weight'].str.contains(('p'), na = False)]
-        
-        #s3_df['weight'] = s3_df['weight'].str.contains(('ml'), na = False).strip("ml")
-        #s3_df['weight'] = 
-        #s3_df['weight'] = 
-        
-        ####
-        # s3_df['weight'] = s3_df['weight'].str.strip('kg')
-        # s3_df['weight'] = s3_df['weight'].str.strip('ml')
-        # s3_df['weight'] = s3_df['weight'].str.strip('g')
-        # s3_df['weight'] = s3_df['weight'].str.rstrip('.')
-        # s3_df['weight'] = s3_df['weight'].str.replace('[A-Z]', '', regex=True)
-        # s3_df['weight'] = s3_df['weight'].str.replace('[x]', '*', regex=True)
-        # s3_df['weight'] = s3_df['weight'].str.replace('[a-z]', '', regex=True)
-        # s3_df['weight'] = s3_df['weight'].str.replace(' ', '')
-        # s3_df['weight'] = s3_df['weight'].replace(to_replace='1',value="1000")
-        # # to_replace '*'
-        # #s3_df.loc[s3_df['weight'].str.contains('*', na =False)] =  s3_df['weight'].replace(to_replace='*',value="MULTIYPLY")
-
-        # s = s3_df['weight'].str.split(pat='*', n = 1, expand=True)
-        # s3_df['quantity_w'] = s[0]
-        # s3_df['weight_q'] = s[1]
-        # #replace none with 1
-        # s3_df['weight_q'] = s3_df['weight_q'].fillna(1).astype(float)
-        # s3_df['weight_q'] = s3_df['weight_q'].astype(float)
-        # #convert to float
-        # s3_df['quantity_w'] = s3_df['quantity_w'].astype(float)
-
-        # #multiply and replace
-        # s3_df['weight_1'] = s3_df['quantity_w']*s3_df['weight_q']
-        # #replace weight with weight 1
-        # s3_df['weight'] = s3_df['weight_1']
-        # #drop columns
-        # s3_df = s3_df.drop(['quantity_w'], axis = 1)
-        # s3_df = s3_df.drop(['weight_q'], axis = 1)
-        # s3_df = s3_df.drop(['weight_1'], axis = 1)
-        ####
-
-
-        #print(mask)
-        # print(contains_ml['weight'])
-        # print(contains_grams['weight'])
-        # print(contains_kg['weight'])
-        # print(contains_oz['weight'])
-        # print(contains_x['weight'])
-        # print(s3_df['weight'])
-        # print(s3_df['weight'][1748])
-        print(s3_df)
         return s3_df
 
+    #JSON from AWS (task 8)
+    def extract_from_s3_json(self, url='https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'):
+        self.json_path = url
+        sales_df = pd.read_json(self.json_path)
 
+        # Drop rows with NULL values
+        sales_df = sales_df.dropna(how='all')
 
-'''
-    def read_db_creds(self, file_path='db_creds.yaml'):
-        try:
-            with open(file_path, 'r') as file:
-                credentials = yaml.safe_load(file)
-            return credentials
-        except FileNotFoundError:
-            print(f"Error: The file {file_path} was not found.")
-        except yaml.YAMLError as e:
-            print(f"Error reading YAML file: {e}")
-
-    def init_db_engine(self):
-        credentials = self.read_db_creds()
-        if credentials:
-            # Construct the database URL
-            db_url = f"postgresql://{credentials.get('RDS_USER', '')}:{credentials.get('RDS_PASSWORD', '')}@{credentials.get('RDS_HOST', '')}:{credentials.get('RDS_PORT', '')}/{credentials.get('RDS_DATABASE', '')}"
-
-            # Initialize and return the SQLAlchemy engine
-            engine = create_engine(db_url)
-            return engine
-        else:
-            return None
-'''
+        return sales_df

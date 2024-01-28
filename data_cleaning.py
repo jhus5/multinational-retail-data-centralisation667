@@ -72,9 +72,83 @@ class DataCleaning:
         #print(self.csdata.head())
         return csdata
     
+
+    #######################
+    #######################
+    def convert_product_weights(self, s3_df):
+        ##the following code should go to data_cleaning class 
+        s3_df = s3_df.dropna(how='all')
+
+        #remove whitespace to all strings in column
+        s3_df['weight'] = s3_df['weight'].apply(lambda x: x.strip() if isinstance(x, str) else x)
+        s3_df['weight'] = s3_df['weight'].apply(lambda x: x.rstrip(".") if isinstance(x, str) else x)
+        s3_df['weight'] = s3_df['weight'].apply(lambda x: x.rstrip(" ") if isinstance(x, str) else x)
+        #for item in s3_df['weight']:
+        #      print(item)
+
+        def convert_to_kg(x):
+            if 'x' in x:
+                # Extract numerical values for quantity and weight
+                quantity, weight_value = re.findall(r'\d+', x)
+                weight_in_kg = int(quantity) * float(weight_value) / 1000
+                return weight_in_kg
+            
+            elif 'kg' in x:
+                return float(x[:-2]) * 1
+            elif 'ml' in x:
+                return float(x[:-2]) * 0.001
+            elif 'oz' in x:
+                return float(x[:-2]) * 28.35 * 0.001
+            elif 'g' in x:
+                return float(x[:-1]) * 0.001
+            else:
+                pass
+
+        s3_df['weight'] = s3_df['weight'].apply(convert_to_kg)
+
+        #print(s3_df)
+        return s3_df
+
+                
+    ################################
+    def clean_products_data(self,s3_df):
+        # def clean_pd(x): 
+        #     if 'M' in x:
+        #         return 'None'
+        #     else:
+        #         pass        
+
+    
+        # s3_df['weight'] = s3_df['weight'].apply(clean_pd)
+
+        # for item in s3_df['weight']:
+        #     print(item)
+        # print(s3_df)
+        return s3_df
+
+
+    #######################
+    #######################
+    def clean_orders_data(self, orders_df):
+        orders_df = orders_df.drop(columns = ['first_name', 'last_name', '1'])
+        return orders_df
+
+    #######################
+
+
+
+
+
+    #################################
+    #return s3_df
+    
     # def convert_product_weights(s3_df):
-    #     for line in len(s3_df['weight']):
-    #         if 'ml' in s3_df.weight[line]:
+    #   # Drop rows with NULL values
+    #   s3_df = s3_df.dropna(how='all')
+    #   
+    #
+    #   for line in len(s3_df['weight']):
+    #    if 'ml' in s3_df.weight[line]:
     #             #remove ml 
     #             #convert to float
     #             #multiply bu 0.001
