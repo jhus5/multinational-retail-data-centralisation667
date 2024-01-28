@@ -1,39 +1,38 @@
-# multinational-retail-data-centralisation667
+# Multinational Retail Data Centralisation: A System for Storing and Accessing Sales Data
 
-##Multinational Retail Data Centralisation
-##Project Title
-Multinational Retail Data Centralisation: A System for Storing and Accessing Sales Data
+## Project Title
+**Multinational Retail Data Centralisation:** A System for Storing and Accessing Sales Data
 
-##Table of Contents
-Introduction
-Project Description
-Installation
-Usage
-File Structure
-License
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Project Description](#project-description)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [File Structure](#file-structure)
+6. [License](#license)
 
-##1. Introduction
+## 1. Introduction
 In this project, we develop a system for centralising and accessing sales data from a multinational retail company. Our aim is to make the sales data easily accessible and act as a single source of truth for business metrics.
 
-##2. Project Description
+## 2. Project Description
 The project involves setting up a database to store the sales data and writing scripts for querying and processing the data. The following libraries are used:
+- `yaml`
+- `sqlalchemy`
+- `pandas`
+- `tabula`
+- `requests`
+- `json`
+- `boto3`
+- `re`
+- `numpy`
 
-yaml
-sqlalchemy
-pandas
-tabula
-requests
-json
-boto3
-re
-numpy
-
-##3. Installation
+## 3. Installation
 To get started, you'll need to install the required libraries:
-
+```bash
 pip install sqlalchemy pandas tabula requests boto3 numpy
+```
 
-##4. Usage
+## 4. Usage
 First, create a new configuration file config.yaml (such as db_creds.yaml and local_db_credds.yaml) to store your database credentials:
 
 db_uri: postgresql://user:password@localhost/database_name
@@ -45,7 +44,7 @@ AWS RDS
 JSON
 CSV
 
-##5. File Structure
+## 5. File Structure
 data_cleaning.py
 database_connector.py
 database_extraction.py
@@ -53,5 +52,5 @@ db_creds.yaml
 local_db_creds.yaml
 main.py
 
-##6. License
+## 6. License
 This project is licensed under the MIT License. Feel free to use, modify and distribute the code as needed.
