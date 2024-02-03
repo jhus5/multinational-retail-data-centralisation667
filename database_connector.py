@@ -29,7 +29,7 @@ class DatabaseConnector:
             # Change the database URL to connect to a local PostgreSQL database
    
             db_url = f"postgresql+psycopg2://{local_credentials['RDS_USER']}:{local_credentials['RDS_PASSWORD']}@{local_credentials['RDS_HOST']}:{local_credentials['RDS_PORT']}/{local_credentials['RDS_DATABASE']}"
-            #db_url = f"postgresql+psycopg2://aicore_admin:AiCore2022@data-handling-project-readonly.cq2e8zno855e.eu-west-1.rds.amazonaws.com:5432/postgres"
+
             print(db_url)
             # Initialize and return the DatabaseConnector with db_url
             engine = create_engine(db_url)
@@ -43,5 +43,5 @@ class DatabaseConnector:
             cleaned_data.to_sql(name=table_name, con=self.engine, if_exists='replace', index=False)
             print(f"Data uploaded to the '{table_name}' table successfully.")
         except Exception as e:
-            print(f"Error uploading data to th`e database: {e}")
+            print(f"Error uploading data to th'e database: {e}")
 

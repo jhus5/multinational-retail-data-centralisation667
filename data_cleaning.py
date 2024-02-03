@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 from datetime import datetime
 from database_extraction import *
 
@@ -32,10 +33,13 @@ class DataCleaning:
     
     #pdf table data task #4 
     def clean_card_data(self, dfs):
+        
         # Drop rows with NULL values
         dfs = dfs.dropna(how='all')
-        
 
+        # strip leading charecter '?' from card_number
+        dfs['card_number'] = dfs['card_number'].apply(lambda x: x.lstrip("?") if isinstance(x, str) else x)
+        
         ##standardise dates
         #remove non datetime
         dfs['date_payment_confirmed'] = pd.to_datetime(dfs['date_payment_confirmed'], format = 'mixed', errors='coerce')
@@ -59,6 +63,12 @@ class DataCleaning:
         
         #remove empty rows
         self.csdata = self.csdata.dropna(subset=['opening_date'])
+
+        #replace n/a
+        self.csdata = self.csdata.replace('N/A',np.nan)
+
+        #remove non-numeric charecters
+        self.csdata['staff_numbers'] = self.csdata['staff_numbers'].replace(r'[^0-9]+', '', regex=True)
         
         #keep date only
         #self.csdata['opening_date'] = self.csdata['opening_date'].dt.date
@@ -112,18 +122,9 @@ class DataCleaning:
                 
     ################################
     def clean_products_data(self,s3_df):
-        # def clean_pd(x): 
-        #     if 'M' in x:
-        #         return 'None'
-        #     else:
-        #         pass        
-
-    
-        # s3_df['weight'] = s3_df['weight'].apply(clean_pd)
-
-        # for item in s3_df['weight']:
-        #     print(item)
-        # print(s3_df)
+        # Filter 'product_price' column to keep only those that start with '£'
+        s3_df = s3_df[s3_df.product_price.str.startswith(('£'))]
+        print(s3_df)
         return s3_df
 
 
@@ -131,52 +132,9 @@ class DataCleaning:
     #######################
     def clean_orders_data(self, orders_df):
         orders_df = orders_df.drop(columns = ['first_name', 'last_name', '1'])
+        # # Drop rows with NULL values
+        # orders_df = orders_df.dropna(how='all')
+        # #remove non-numeric charecters
+        # orders_df['day'] = orders_df['day'].replace(r'[^0-9]+', '', regex=True)
         return orders_df
 
-    #######################
-
-
-
-
-
-    #################################
-    #return s3_df
-    
-    # def convert_product_weights(s3_df):
-    #   # Drop rows with NULL values
-    #   s3_df = s3_df.dropna(how='all')
-    #   
-    #
-    #   for line in len(s3_df['weight']):
-    #    if 'ml' in s3_df.weight[line]:
-    #             #remove ml 
-    #             #convert to float
-    #             #multiply bu 0.001
-    #         elif 'g' in s3_df.weight[line]:
-    #             #remove g 
-    #             #convert to float
-    #             #multiply bu 0.001
-    #         else:
-    #             #remove kg
-    #             #convert to float
-
-    #     s3_df.weight
-    # #strip alpha i.e. kg and g
-    
-    # #convert to float
-
-    # return s3_df
-"""
-
-    def clean_user_data(self):
-        # Execution of cleaning methods
-        cleaned_data = self.clean_data()
-        #cleaned_data = self.clean_date_errors('join_date')
-        #cleaned_data = self.clean_data_types('address', object)
-        return print(cleaned_data)
-"""   
-#test code method by method
-#data_extractor_instance = DataExtractor()    
-#data_cleaning_instance = DataCleaning(None) #(data_extractor_instance).clean_user_data()
-#data_cleaning_instance.clean_data()
-#data_cleaning_instance.clean_date_errors()

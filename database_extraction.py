@@ -13,7 +13,7 @@ import json
 import boto3
 ##regex
 import re
-
+#numpy
 import numpy as np
 
 
@@ -52,10 +52,12 @@ class DataExtractor:
         #pdf_path = 'https://data-handling-public.s3.eu-west-1.amazonaws.com/card_details.pdf'
         self.pdf_path = pdf_path
         # Read remote pdf into list of DataFrame
-        dfs = tabula.read_pdf(self.pdf_path, pages='1', stream = True) # pages='all'
-        #take first table from dataframes
-        dfs = dfs[0]
-        #print(df)
+        dfs = pd.concat(tabula.read_pdf(self.pdf_path, pages='all', multiple_tables=False)) # pages='1'
+        
+        #print(f"Found {len(dfs)} tables")
+        #dfs = dfs[0]
+        
+        
         return dfs
 
     ##api extract and clean details of each store
@@ -103,6 +105,26 @@ class DataExtractor:
     def extract_from_s3_json(self, url='https://data-handling-public.s3.eu-west-1.amazonaws.com/date_details.json'):
         self.json_path = url
         sales_df = pd.read_json(self.json_path)
+
+        # Drop rows with NULL values
+        sales_df = sales_df.dropna(how='all')
+
+        #remove non-numeric charecters
+        #sales_df['day'] = sales_df['day'].replace(r'[^0-9]+', '', regex=True)
+
+        #remove non-numeric data
+        sales_df['month'] = pd.to_numeric(sales_df['month'], errors="coerce")
+        sales_df['year'] = pd.to_numeric(sales_df['year'], errors="coerce")
+        sales_df['day'] = pd.to_numeric(sales_df['day'], errors="coerce")
+
+        sales_df['timestamp'] = pd.to_datetime(sales_df['timestamp'], errors="coerce")
+        sales_df['timestamp'] = sales_df['timestamp'].dt.time
+
+        sales_df = sales_df[~sales_df.time_period.str.contains(r'[0-9]')]
+
+
+        sales_df['time_period'] = sales_df['time_period'].replace('NULL',np.nan, regex=True)
+        sales_df['date_uuid'] = sales_df['date_uuid'].replace('NULL',np.nan, regex=True)
 
         # Drop rows with NULL values
         sales_df = sales_df.dropna(how='all')
