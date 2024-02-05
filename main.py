@@ -91,7 +91,7 @@ if __name__ == "__main__":
     sales_df = data_extractor_instance.extract_from_s3_json()
     #print(sales_df)
     #any cleaning
-    ##move to data
+    ##upload to data
     another_database_connector_instance.upload_to_db(sales_df, table_name='dim_date_times') #upload sales data
 
 

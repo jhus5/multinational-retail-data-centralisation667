@@ -124,7 +124,7 @@ class DataCleaning:
     def clean_products_data(self,s3_df):
         # Filter 'product_price' column to keep only those that start with '£'
         s3_df = s3_df[s3_df.product_price.str.startswith(('£'))]
-        print(s3_df)
+        #print(s3_df)
         return s3_df
 
 

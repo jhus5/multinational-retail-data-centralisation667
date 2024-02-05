@@ -66,7 +66,6 @@ class DataExtractor:
         if response:
             print('Request is successful.')
             print(response.status_code)
-            #print(response.text)
             print(response.json())
             my_json = response.json()
             no_of_stores = my_json['number_stores']
